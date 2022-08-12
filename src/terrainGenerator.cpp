@@ -17,8 +17,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-std::string root = std::filesystem::current_path();
-std::string path = root + "/";
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 // camera
@@ -34,21 +32,25 @@ float lastFrame = 0.0f;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
-// settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
 
-float input_x = 0.0f;
-float input_y = 0.0f;
-float input_z = 0.0f;
-float speed = 5;
-    double xpos, ypos;
+    float input_x = 0.0f;
+    float input_y = 0.0f;
+    float input_z = 0.0f;
 
+    const unsigned int SCR_WIDTH = 800;
+    const unsigned int SCR_HEIGHT = 600;
+    float lastX = SCR_WIDTH / 2.0f;
+    float lastY = SCR_HEIGHT / 2.0f;
+
+    
 class terrain_generator
 {
 public:
+    // settings
+    float speed = 5;
+    double xpos, ypos;
+    std::string root = std::filesystem::current_path();
+    std::string path = root + "/";
     GLFWwindow* window;
     unsigned int texture1, texture2;
     Shader ourShader;
@@ -66,9 +68,9 @@ public:
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
     
-int init()
+terrain_generator(GLFWwindow *window1)
 {
-
+    window = window1;
     // cubePositions = {
     //     glm::vec3( 0.0f,  0.0f,  0.0f),
     //     glm::vec3( 2.0f,  5.0f, -15.0f),
@@ -84,18 +86,18 @@ int init()
 
     // glfw: initialize and configure
     // ------------------------------
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // glfwInit();
+    // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     // glfw window creation
     // --------------------
-    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Euclid Engine", NULL, NULL);
+    // window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Euclid Engine", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
-        return -1;
+        // return -1;
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -106,7 +108,7 @@ int init()
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
+        // return -1;
     }
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -253,7 +255,7 @@ view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
   		   glm::vec3(0.0f, 0.0f, 0.0f), 
   		   glm::vec3(0.0f, 1.0f, 0.0f));
 glEnable(GL_DEPTH_TEST);
-return 0;
+// return 0;
 }
 
 int run()
@@ -317,10 +319,14 @@ int run()
     }
 
     // optional: de-allocate all resources once they've outlived their purpose:
+    return 0;
+}
+
+int terminate()
+{
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
