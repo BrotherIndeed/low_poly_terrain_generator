@@ -6,7 +6,6 @@ class Cube
 public:
     // settings
     float speed = 5;
-    double xpos, ypos;
 
     GLFWwindow* window;
     unsigned int texture1, texture2;
@@ -25,7 +24,7 @@ public:
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
     
-Cube(GLFWwindow *window1)
+int init(GLFWwindow *window1)
 {
     window = window1;
 
@@ -53,7 +52,7 @@ Cube(GLFWwindow *window1)
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
-    float vertices[] = {
+    std::vector<float>  vertices = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -96,14 +95,14 @@ Cube(GLFWwindow *window1)
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
-
+    
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
 
     // position attribute
@@ -177,26 +176,11 @@ view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
   		   glm::vec3(0.0f, 0.0f, 0.0f), 
   		   glm::vec3(0.0f, 1.0f, 0.0f));
 glEnable(GL_DEPTH_TEST);
-// return 0;
+return 0;
 }
 
 int run()
 {
-        // per-frame time logic
-        // --------------------
-        float currentFrame = static_cast<float>(glfwGetTime());
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-
-        // input
-        // -----
-        processInput(window);
-        glfwGetCursorPos(window, &xpos, &ypos);
-
-        // render
-        // ------
-        glClearColor(0.5f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
 
          // bind textures on corresponding texture units
         glActiveTexture(GL_TEXTURE0);
@@ -216,7 +200,7 @@ int run()
 
         // render boxes
         glBindVertexArray(VAO);
-        for (unsigned int i = 0; i < 10; i++)
+        for (unsigned int i = 0; i < 1; i++)
         {
             // calculate the model matrix for each object and pass it to shader before drawing
             glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
@@ -234,8 +218,7 @@ int run()
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+
     
 
     // optional: de-allocate all resources once they've outlived their purpose:
@@ -250,7 +233,7 @@ int terminate()
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
-    glfwTerminate();
+
     return 0;
 }
 };

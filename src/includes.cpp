@@ -24,6 +24,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 // Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 bool firstMouse = true;
 
+    double xpos, ypos;
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
