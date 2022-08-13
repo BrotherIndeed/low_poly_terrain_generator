@@ -4,9 +4,9 @@ class Engine
 {
     public:
     GLFWwindow*  window;
-    std::vector<Cube> chunk_memory;
-        Cube ourcube;
-    
+    // std::vector<Cube> chunk_memory;
+    Cube ourcube;
+
     int init()
     {    
         glfwInit();
@@ -15,7 +15,7 @@ class Engine
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Terrain generator", NULL, NULL);
-        chunk_memory.push_back(ourcube);
+        // chunk_memory.push_back(ourcube);
         ourcube.init(window,0,0);
         return 0;
     }
@@ -45,6 +45,7 @@ class Engine
 
 
         ourcube.run();
+        // std::cout<<camera.Position.x<<" "<<camera.Position.y<<" "<<camera.Position.z<<" \n";
         // ourcube2.run();
 
         glfwSwapBuffers(window);

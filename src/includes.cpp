@@ -37,7 +37,7 @@ std::string path = root + "/";
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
-Camera camera(glm::vec3(0.0f, 20.0f, 3.0f));
+Camera camera(glm::vec3(586.0f, 80.0f, -55.0f));
 
 
     float input_x = 0.0f;
