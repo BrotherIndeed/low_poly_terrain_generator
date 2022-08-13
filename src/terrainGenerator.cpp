@@ -7,6 +7,7 @@ public:
     // settings
     float speed = 5;
     int chunk_size = 6;
+    int indices_size=0;
 
     GLFWwindow* window;
     unsigned int texture1, texture2;
@@ -56,57 +57,56 @@ int init(GLFWwindow *window1)
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     // std::vector<float>  vertices = {
-    //     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-    //     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-    //     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    //     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    //     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    //     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        //     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        //     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+        //     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        //     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        //     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        //     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-    //     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    //     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    //     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    //     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    //     -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-    //     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        //     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        //     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        //     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        //     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        //     -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        //     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-    //     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    //     -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    //     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    //     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    //     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    //     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        //     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        //     -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        //     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        //     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        //     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        //     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-    //     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    //     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    //     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    //     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    //     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    //     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        //     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        //     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        //     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        //     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        //     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        //     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-    //     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    //     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-    //     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    //     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    //     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    //     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        //     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        //     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+        //     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        //     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        //     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        //     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
-    //     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    //     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    //     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    //     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    //     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-    //     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        //     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        //     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        //     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        //     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        //     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        //     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     // };
-    std::vector<float>  vertices = {
-        0.5f,  0.5f, 0.0f,  0.0f, 0.0f,
-        0.5f, -0.5f, 0.0f,  1.0f, 0.0f,
-        // 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
 
-        -0.5f, -0.5f, 0.0f,  1.0f, 1.0f,
-        -0.5f,  0.5f, 0.0f,  0.0f, 1.0f,
-        // -0.5f, -0.5f, -0.5f,  0.0f, 0.0f
+    std::vector<float>  vertices = {
+        0.5f,  0.0f,0.5f, 
+        0.5f, 0.0f,-0.5f, 
+        -0.5f, 0.0f,-0.5f, 
+        -0.5f,  0.0f,0.5f, 
     };
+    
     std::vector<unsigned int> indices = {  // note that we start from 0!
         0, 1, 3,  // first Triangle
         1, 2, 3   // second Triangle
@@ -116,11 +116,11 @@ int init(GLFWwindow *window1)
 
     // for(int i=0;i<chunk_size*chunk_size;i++)
     // {
-    //     vertices.push_back(1.0f*i);
-    //     vertices.push_back(1.0f*i*i);
-    //     vertices.push_back(2.0f*i*i*i);
-    //     vertices.push_back(1.0f*i*i);
-    //     vertices.push_back(0.5f*i*i*i);
+        // vertices.push_back(1.0f*i);
+        // vertices.push_back(1.0f*i*i);
+        // vertices.push_back(2.0f*i*i*i);
+        // vertices.push_back(1.0f*i*i);
+        // vertices.push_back(0.5f*i*i*i);
     // }
 
 
@@ -135,66 +135,17 @@ int init(GLFWwindow *window1)
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int) , indices.data(), GL_STATIC_DRAW);
-
+    indices_size = indices.size();
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    // glEnableVertexAttribArray(1);
 
-glBindBuffer(GL_ARRAY_BUFFER, 0);
- glBindVertexArray(0); 
-    // load and create a texture 
-    // -------------------------
-    // texture 1
-    // ---------
-    glGenTextures(1, &texture1);
-    glBindTexture(GL_TEXTURE_2D, texture1);
-    // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
-    int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-    unsigned char *data = stbi_load((path+"resources/textures/marble.jpg").c_str(), &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
-    // texture 2
-    // ---------
-    glGenTextures(1, &texture2);
-    glBindTexture(GL_TEXTURE_2D, texture2);
-    // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
-    data = stbi_load((path+"resources/textures/d.png").c_str(), &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        // note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0); 
 
     ourShader.Shader_init("7.4.camera.vs", "7.4.camera.fs");
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
@@ -239,7 +190,7 @@ int run()
             glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
             // model = glm::translate(model, cubePositions[i]);
             
-            float angle = 20.0f * i;
+            // float angle = 20.0f * i;
 
             // model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             // model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));  
@@ -247,7 +198,7 @@ int run()
             ourShader.setMat4("model", model);
 
             // glDrawArrays(GL_TRIANGLES, 0, 36);
-             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+             glDrawElements(GL_TRIANGLES, indices_size, GL_UNSIGNED_INT, 0);
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
