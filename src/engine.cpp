@@ -33,7 +33,7 @@ class Engine
         processInput(window);
         glfwGetCursorPos(window, &xpos, &ypos);
         // render
-        glClearColor(0.5f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.594f, 0.8078f, 0.9216f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
 
 

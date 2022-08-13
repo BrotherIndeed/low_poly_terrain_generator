@@ -6,25 +6,33 @@ class Cube
 public:
     // settings
     float speed = 5;
-    int chunk_size = 6;
+    int chunk_size = 600;
     int indices_size=0;
 
     GLFWwindow* window;
     unsigned int texture1, texture2;
     Shader ourShader;
     unsigned int VBO, VAO, EBO;
-    glm::vec3 cubePositions[sizeof(glm::vec3)*10] = {
-        glm::vec3( 0.0f,  0.0f,  0.0f),
-        glm::vec3( 2.0f,  5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3( 2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f,  3.0f, -7.5f),
-        glm::vec3( 1.3f, -2.0f, -2.5f),
-        glm::vec3( 1.5f,  2.0f, -2.5f),
-        glm::vec3( 1.5f,  0.2f, -1.5f),
-        glm::vec3(-1.3f,  1.0f, -1.5f)
-    };
+int numX = 512,
+    numY = 512,
+    numOctaves = 7;
+double persistence = 0.5;
+
+#define maxPrimeIndex 10
+int primeIndex = 0;
+
+int primes[maxPrimeIndex][3] = {
+  { 995615039, 600173719, 701464987 },
+  { 831731269, 162318869, 136250887 },
+  { 174329291, 946737083, 245679977 },
+  { 362489573, 795918041, 350777237 },
+  { 457025711, 880830799, 909678923 },
+  { 787070341, 177340217, 593320781 },
+  { 405493717, 291031019, 391950901 },
+  { 458904767, 676625681, 424452397 },
+  { 531736441, 939683957, 810651871 },
+  { 997169939, 842027887, 423882827 }
+};
     
 int init(GLFWwindow *window1)
 {
@@ -56,72 +64,34 @@ int init(GLFWwindow *window1)
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
-    // std::vector<float>  vertices = {
-        //     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        //     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        //     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        //     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        //     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        //     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    std::vector<unsigned int> indices;
+    std::vector<float>  vertices;
 
-        //     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        //     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        //     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        //     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        //     -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        //     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    for(int i=0;i<chunk_size;i++)
+    {
+        for(int j=0;j<chunk_size;j++)
+        {
+            vertices.push_back(1.0f*i);
+            vertices.push_back(100.0f * ValueNoise_2D(i, j));
+            // std::cout<<ValueNoise_2D(i, j)*100<<std::endl;
+            vertices.push_back(-1.0f*j);
+        }
+    }
 
-        //     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        //     -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        //     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        //     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        //     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        //     -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    for( int i=0;i<(chunk_size*chunk_size)-chunk_size;i++)
+    {
+        if(i%chunk_size!=chunk_size-1)
+        {
+            indices.push_back(i);
+            indices.push_back(i+1);
+            indices.push_back(i+chunk_size);
 
-        //     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        //     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        //     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        //     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        //     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        //     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            indices.push_back(i+1);
+            indices.push_back(i+chunk_size);
+            indices.push_back(i+chunk_size+1);
 
-        //     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        //     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        //     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        //     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        //     -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        //     -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        //     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        //     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        //     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        //     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        //     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        //     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    // };
-
-    std::vector<float>  vertices = {
-        0.5f,  0.0f,0.5f, 
-        0.5f, 0.0f,-0.5f, 
-        -0.5f, 0.0f,-0.5f, 
-        -0.5f,  0.0f,0.5f, 
-    };
-    
-    std::vector<unsigned int> indices = {  // note that we start from 0!
-        0, 1, 3,  // first Triangle
-        1, 2, 3   // second Triangle
-    };
-
-    // std::vector<float>  vertices;
-
-    // for(int i=0;i<chunk_size*chunk_size;i++)
-    // {
-        // vertices.push_back(1.0f*i);
-        // vertices.push_back(1.0f*i*i);
-        // vertices.push_back(2.0f*i*i*i);
-        // vertices.push_back(1.0f*i*i);
-        // vertices.push_back(0.5f*i*i*i);
-    // }
+        }
+    }
 
 
     glGenVertexArrays(1, &VAO);
@@ -175,7 +145,7 @@ int run()
         // activate shader
         ourShader.use();
         // pass projection matrix to shader (note that in this case it could change every frame)
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 300.0f);
         ourShader.setMat4("projection", projection);
 
         // camera/view transformation
@@ -220,5 +190,57 @@ int terminate()
     // ------------------------------------------------------------------
 
     return 0;
+}
+
+
+double Noise(int i, int x, int y) {
+  int n = x + y * 57;
+  n = (n << 13) ^ n;
+  int a = primes[i][0], b = primes[i][1], c = primes[i][2];
+  int t = (n * (n * n * a + b) + c) & 0x7fffffff;
+  return 1.0 - (double)(t)/1073741824.0;
+}
+
+double SmoothedNoise(int i, int x, int y) {
+  double corners = (Noise(i, x-1, y-1) + Noise(i, x+1, y-1) +
+                    Noise(i, x-1, y+1) + Noise(i, x+1, y+1)) / 16,
+         sides = (Noise(i, x-1, y) + Noise(i, x+1, y) + Noise(i, x, y-1) +
+                  Noise(i, x, y+1)) / 8,
+         center = Noise(i, x, y) / 4;
+  return corners + sides + center;
+}
+
+double Interpolate(double a, double b, double x) {  // cosine interpolation
+  double ft = x * 3.1415927,
+         f = (1 - cos(ft)) * 0.5;
+  return  a*(1-f) + b*f;
+}
+
+double InterpolatedNoise(int i, double x, double y) {
+  int integer_X = x;
+  double fractional_X = x - integer_X;
+  int integer_Y = y;
+  double fractional_Y = y - integer_Y;
+
+  double v1 = SmoothedNoise(i, integer_X, integer_Y),
+         v2 = SmoothedNoise(i, integer_X + 1, integer_Y),
+         v3 = SmoothedNoise(i, integer_X, integer_Y + 1),
+         v4 = SmoothedNoise(i, integer_X + 1, integer_Y + 1),
+         i1 = Interpolate(v1, v2, fractional_X),
+         i2 = Interpolate(v3, v4, fractional_X);
+  return Interpolate(i1, i2, fractional_Y);
+}
+
+double ValueNoise_2D(double x, double y) {
+  double total = 0,
+         frequency = pow(2, numOctaves),
+         amplitude = 1;
+  for (int i = 0; i < numOctaves; ++i) {
+    frequency /= 2;
+    amplitude *= persistence;
+    total += InterpolatedNoise((primeIndex + i) % maxPrimeIndex,
+        x / frequency, y / frequency) * amplitude;
+  }
+  return total / frequency;
 }
 };
