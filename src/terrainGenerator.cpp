@@ -6,7 +6,8 @@ class Cube
 public:
     // settings
     float speed = 5;
-    int chunk_size = 600;
+    int chunk_size = 1200;
+    
     int indices_size=0;
 
     GLFWwindow* window;
@@ -34,7 +35,7 @@ int primes[maxPrimeIndex][3] = {
   { 997169939, 842027887, 423882827 }
 };
     
-int init(GLFWwindow *window1)
+int init(GLFWwindow *window1, int chunk_x, int chunk_y)
 {
     window = window1;
 
@@ -71,9 +72,18 @@ int init(GLFWwindow *window1)
     {
         for(int j=0;j<chunk_size;j++)
         {
-            vertices.push_back(1.0f*i);
-            vertices.push_back(100.0f * ValueNoise_2D(i, j));
-            // std::cout<<ValueNoise_2D(i, j)*100<<std::endl;
+            vertices.push_back((1.0f*i)+(chunk_x*chunk_size));
+            float h = 100.0f * ValueNoise_2D(i+(chunk_x*chunk_size), j+(chunk_y*chunk_size));
+            if((h)>0)
+            {
+                vertices.push_back(h);
+            }
+            else
+            {
+                vertices.push_back(0.0f);
+            }
+            vertices.push_back(-1.0f*j+(chunk_y*chunk_size));
+            //normal
             vertices.push_back(-1.0f*j);
         }
     }
@@ -108,11 +118,11 @@ int init(GLFWwindow *window1)
     indices_size = indices.size();
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // texture coord attribute
-    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    // glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 1 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0); 
@@ -145,7 +155,7 @@ int run()
         // activate shader
         ourShader.use();
         // pass projection matrix to shader (note that in this case it could change every frame)
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 300.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1.415f*chunk_size);
         ourShader.setMat4("projection", projection);
 
         // camera/view transformation

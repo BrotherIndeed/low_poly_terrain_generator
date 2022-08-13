@@ -4,8 +4,9 @@ class Engine
 {
     public:
     GLFWwindow*  window;
-    Cube ourcube;
-    Cube ourcube2;
+    std::vector<Cube> chunk_memory;
+        Cube ourcube;
+    
     int init()
     {    
         glfwInit();
@@ -14,9 +15,8 @@ class Engine
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Terrain generator", NULL, NULL);
-
-        ourcube.init(window);
-        ourcube2.init(window);
+        chunk_memory.push_back(ourcube);
+        ourcube.init(window,0,0);
         return 0;
     }
 
@@ -24,6 +24,12 @@ class Engine
     { 
         while (!glfwWindowShouldClose(window))
         {
+        // if(camera.Position.x/ourcube.chunk_size>1)
+        // {
+        //     std::cout<<"out of bounds";
+        //     ourcube.terminate();
+        //     ourcube.init(window,1,0);
+        // }
         // per-frame time logic
         // --------------------
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -39,7 +45,7 @@ class Engine
 
 
         ourcube.run();
-        ourcube2.run();
+        // ourcube2.run();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -52,7 +58,7 @@ class Engine
     {
         
         ourcube.terminate();
-        ourcube2.terminate();
+        // ourcube2.terminate();
         
         // glfw: terminate, clearing all previously allocated GLFW resources.
         // ------------------------------------------------------------------
