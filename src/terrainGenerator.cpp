@@ -1,13 +1,11 @@
 
 #include"includes.cpp"
-
 class Cube
 {
 public:
     // settings
-    float speed = 5;
-    int chunk_size = 1200;
-    
+    float speed = 1;
+    int scale=10;
     int indices_size=0;
 
     GLFWwindow* window;
@@ -17,8 +15,8 @@ public:
 int numX = 512,
     numY = 512,
     numOctaves = 7;
-double persistence = 0.5;
-
+double persistence = 0.55;
+int chunk_size2 = 100;
 #define maxPrimeIndex 10
 int primeIndex = 0;
 
@@ -32,13 +30,13 @@ int primes[maxPrimeIndex][3] = {
   { 405493717, 291031019, 391950901 },
   { 458904767, 676625681, 424452397 },
   { 531736441, 939683957, 810651871 },
-  { 997169939, 842027887, 423882827 }
+  { 997169939, 842027887, 423882825 }
 };
     
-int init(GLFWwindow *window1, int chunk_x, int chunk_y)
+int init(GLFWwindow *window1, int chunk_x, int chunk_y, int chunk_size)
 {
+    // chunk_size = chunk_size/scale;
     window = window1;
-
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -72,22 +70,27 @@ int init(GLFWwindow *window1, int chunk_x, int chunk_y)
     {
         for(int j=0;j<chunk_size;j++)
         {
-            vertices.push_back((1.0f*i)+(chunk_x*chunk_size));
-            float h = 100.0f * ValueNoise_2D(i+(chunk_x*chunk_size), j+(chunk_y*chunk_size));
-            if((h)>0)
-            {
-                vertices.push_back(h);
-            }
-            else
-            {
-                vertices.push_back(0.0f);
-            }
-            vertices.push_back(-1.0f*j+(chunk_y*chunk_size));
-            //normal
-            vertices.push_back(-1.0f*j);
+            
+                vertices.push_back((1.0f*i*scale)+(chunk_x*chunk_size));
+                float h = 20.0f * ValueNoise_2D((i*scale)+(chunk_x*chunk_size), (j*scale)+(chunk_y*chunk_size));
+                if((h)>0)
+                {
+                    vertices.push_back(10+h*scale);
+                    // std::cout<<h*scale<<std::endl;
+
+                    // vertices.push_back(2);
+                }
+                else
+                {
+                    vertices.push_back(20+(h*scale/3));
+                }
+                vertices.push_back((-1.0f*j*scale)+(chunk_y*chunk_size));
+                //norma
+                vertices.push_back(1.0f*((   (i*i)+(j*j)   )));
         }
     }
 
+// int poly_skip = 1;
     for( int i=0;i<(chunk_size*chunk_size)-chunk_size;i++)
     {
         if(i%chunk_size!=chunk_size-1)
@@ -127,11 +130,11 @@ int init(GLFWwindow *window1, int chunk_x, int chunk_y)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0); 
 
-    ourShader.Shader_init("7.4.camera.vs", "7.4.camera.fs");
+    ourShader.Shader_init("7.4.camera.vs", "7.4.camera.fs", "7.4.camera.gs");
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
     ourShader.use(); 
-    ourShader.setInt("texture1", 0);
+    // ourShader.setInt("texture1", 0);
     // ourShader.setInt("texture2", 1);
 
 
@@ -145,7 +148,7 @@ return 0;
 
 int run()
 {
-
+    // std::cout<<camera.Position.x<<" " <<" "<< camera.Position.y<<" "<<camera.Position.z<<"\n ";
          // bind textures on corresponding texture units
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
@@ -155,7 +158,7 @@ int run()
         // activate shader
         ourShader.use();
         // pass projection matrix to shader (note that in this case it could change every frame)
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1.415f*chunk_size);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1400.0f*scale);
         ourShader.setMat4("projection", projection);
 
         // camera/view transformation

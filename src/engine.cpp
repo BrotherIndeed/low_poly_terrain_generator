@@ -4,19 +4,23 @@ class Engine
 {
     public:
     GLFWwindow*  window;
-    // std::vector<Cube> chunk_memory;
+    std::vector<Cube> chunk_memory;
     Cube ourcube;
+    // Cube ourcube2;
+    int chunk_size = 700;
 
     int init()
     {    
         glfwInit();
+        // chunk_memory.pushback
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Terrain generator", NULL, NULL);
         // chunk_memory.push_back(ourcube);
-        ourcube.init(window,0,0);
+        ourcube.init(window,0,0,chunk_size);
+        // ourcube2.init(window,1,0,chunk_size);
         return 0;
     }
 
@@ -43,6 +47,7 @@ class Engine
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
 
 
+        // ourcube2.run();
 
         ourcube.run();
         // std::cout<<camera.Position.x<<" "<<camera.Position.y<<" "<<camera.Position.z<<" \n";
@@ -59,6 +64,8 @@ class Engine
     {
         
         ourcube.terminate();
+        // ourcube2.terminate();
+
         // ourcube2.terminate();
         
         // glfw: terminate, clearing all previously allocated GLFW resources.
