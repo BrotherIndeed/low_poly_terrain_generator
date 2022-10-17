@@ -7,7 +7,7 @@ class Engine
     std::vector<Cube> chunk_memory;
     Cube ourcube;
     // Cube ourcube2;
-    int chunk_size = 700;
+    int chunk_size = 900;
 
     int init()
     {    
@@ -28,6 +28,8 @@ class Engine
     { 
         while (!glfwWindowShouldClose(window))
         {
+        glClearColor(0.594f, 0.8078f, 0.9216f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
         // if(camera.Position.x/ourcube.chunk_size>1)
         // {
         //     std::cout<<"out of bounds";
@@ -43,8 +45,6 @@ class Engine
         processInput(window);
         glfwGetCursorPos(window, &xpos, &ypos);
         // render
-        glClearColor(0.594f, 0.8078f, 0.9216f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
 
 
         // ourcube2.run();

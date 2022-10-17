@@ -82,7 +82,7 @@ int init(GLFWwindow *window1, int chunk_x, int chunk_y, int chunk_size)
                 }
                 else
                 {
-                    vertices.push_back(20+(h*scale/3));
+                    vertices.push_back(20+(h*scale/2));
                 }
                 vertices.push_back((-1.0f*j*scale)+(chunk_y*chunk_size));
                 //norma
@@ -148,6 +148,9 @@ return 0;
 
 int run()
 {
+    camera.Position.y = 100;
+    // + scale *20.0f * ValueNoise_2D(camera.Position.x,camera.Position.z);
+
     // std::cout<<camera.Position.x<<" " <<" "<< camera.Position.y<<" "<<camera.Position.z<<"\n ";
          // bind textures on corresponding texture units
         glActiveTexture(GL_TEXTURE0);

@@ -20,15 +20,15 @@ void main()
 	int scale = 10;
 
 
-
-	if(height>0)
+ 
+	if(height>0 && height<50)
 	{
 		FragColor = vec4(0.250+direction/10, 0.420+(height/130), 0.340+direction/10, 1.0);
 
 	}
 	if(height>50)
 	{
-		FragColor = vec4(min_max(0.733,0.929), min_max(0.769,0.933),min_max(0.816,0.941), 1.0);
+		FragColor = vec4(0.733+(direction/10), 0.769+(direction/10),0.816+(direction/10), 1.0);
 
 	}
 	if(height<0)

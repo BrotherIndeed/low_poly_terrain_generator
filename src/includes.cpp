@@ -44,7 +44,7 @@ Camera camera(glm::vec3(0.0f, 20.0f, 0.0f));
     float input_y = 0.0f;
     float input_z = 0.0f;
 
-    const unsigned int SCR_WIDTH = 800;
+    const unsigned int SCR_WIDTH = 1200;
     const unsigned int SCR_HEIGHT = 600;
     float lastX = SCR_WIDTH / 2.0f;
     float lastY = SCR_HEIGHT / 2.0f;
