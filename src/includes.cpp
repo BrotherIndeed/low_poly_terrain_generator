@@ -69,7 +69,11 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
             camera.ProcessKeyboard(DOWN, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
-        camera.ProcessKeyboard(LOG, deltaTime); 
+        glfwSetInputMode(window, GLFW_CURSOR,  GLFW_CURSOR_NORMAL);
+    if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+        glfwSetInputMode(window, GLFW_CURSOR,  GLFW_CURSOR_DISABLED);
+       
+; 
 }
 
 // glfw: whenever the mouse moves, this callback is called

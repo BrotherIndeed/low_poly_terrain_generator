@@ -71,7 +71,7 @@ int init(GLFWwindow *window1, int chunk_x, int chunk_y, int chunk_size)
         for(int j=0;j<chunk_size;j++)
         {
             
-                vertices.push_back((1.0f*i*scale)+(chunk_x*chunk_size));
+                vertices.push_back((1.0f*i*scale)+(chunk_x*chunk_size*scale));
                 float h = 20.0f * ValueNoise_2D((i*scale)+(chunk_x*chunk_size), (j*scale)+(chunk_y*chunk_size));
                 if((h)>0)
                 {
@@ -84,7 +84,7 @@ int init(GLFWwindow *window1, int chunk_x, int chunk_y, int chunk_size)
                 {
                     vertices.push_back(20+(h*scale/2));
                 }
-                vertices.push_back((-1.0f*j*scale)+(chunk_y*chunk_size));
+                vertices.push_back((-1.0f*j*scale)+(chunk_y*chunk_size*scale));
                 //norma
                 vertices.push_back(1.0f*((   (i*i)+(j*j)   )));
         }

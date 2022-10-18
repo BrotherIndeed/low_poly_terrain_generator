@@ -7,7 +7,7 @@ class Engine
     std::vector<Cube> chunk_memory;
     Cube ourcube;
     // Cube ourcube2;
-    int chunk_size = 900;
+    int chunk_size = 800;
 
     int init()
     {    
@@ -20,7 +20,7 @@ class Engine
         window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Terrain generator", NULL, NULL);
         // chunk_memory.push_back(ourcube);
         ourcube.init(window,0,0,chunk_size);
-        // ourcube2.init(window,1,0,chunk_size);
+        // ourcube2.init(window,-1,-1,chunk_size);
         return 0;
     }
 
@@ -51,7 +51,6 @@ class Engine
 
         ourcube.run();
         // std::cout<<camera.Position.x<<" "<<camera.Position.y<<" "<<camera.Position.z<<" \n";
-        // ourcube2.run();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -66,7 +65,6 @@ class Engine
         ourcube.terminate();
         // ourcube2.terminate();
 
-        // ourcube2.terminate();
         
         // glfw: terminate, clearing all previously allocated GLFW resources.
         // ------------------------------------------------------------------
